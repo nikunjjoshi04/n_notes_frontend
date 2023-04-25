@@ -1,28 +1,25 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import noteContext from "../context/notes/noteContext";
 
-const AddNote = (props) => {
+const UpdateNote = (props) => {
   const context = useContext(noteContext);
-  const { addNote } = context;
-
-  const [note, setNote] = useState({ title: "", description: "", tag: "" });
+  const { editNote, updateNote, setUpdateNote } = context;
 
   const handleClick = (e) => {
     e.preventDefault();
-    addNote(note);
-    setNote({ title: "", description: "", tag: "" });
-    props.addNoteRef.current.click();
+    editNote(updateNote);
+    props.updateNoteRef.current.click();
   };
 
   const onChange = (e) => {
-    setNote({ ...note, [e.target.name]: e.target.value });
+    setUpdateNote({ ...updateNote, [e.target.name]: e.target.value });
   };
 
   return (
     <>
       <div
         className="modal fade"
-        id="addNoteModelId"
+        id="updateNoteModelId"
         data-backdrop="static"
         data-keyboard="false"
         tabIndex={-1}
@@ -30,10 +27,10 @@ const AddNote = (props) => {
       >
         <div className="modal-dialog modal-dialog-centered modal-xl">
           <div className="modal-content">
-            <form className="my-3">
+            <form className="my-3" onSubmit={handleClick}>
               <div className="modal-header">
-                <h5 className="modal-title" id="addNoteModelIdLabel">
-                  Add Note
+                <h5 className="modal-title" id="updateNoteModelIdLabel">
+                  Update Note
                 </h5>
                 <button
                   type="button"
@@ -54,8 +51,10 @@ const AddNote = (props) => {
                         className="form-control"
                         id="title"
                         name="title"
+                        value={updateNote? updateNote.title: ""}
                         onChange={onChange}
-                        value={note.title}
+                        minLength={5}
+                        required
                       />
                     </div>
                     <div className="form-group col-md-6">
@@ -65,8 +64,9 @@ const AddNote = (props) => {
                         className="form-control"
                         id="tag"
                         name="tag"
+                        value={updateNote? updateNote.tag: ""}
                         onChange={onChange}
-                        value={note.tag}
+                        required
                       />
                     </div>
                   </div>
@@ -76,9 +76,11 @@ const AddNote = (props) => {
                       className="form-control"
                       id="description"
                       name="description"
+                      value={updateNote? updateNote.description: ""}
                       rows={3}
                       onChange={onChange}
-                      value={note.description}
+                      minLength={5}
+                      required
                     />
                   </div>
                 </div>
@@ -93,10 +95,10 @@ const AddNote = (props) => {
                 </button>
                 <button
                   type="submit"
-                  onClick={handleClick}
+                  // onClick={handleClick}
                   className="btn btn-primary"
                 >
-                  Add Note
+                  Update Note
                 </button>
               </div>
             </form>
@@ -107,4 +109,4 @@ const AddNote = (props) => {
   );
 };
 
-export default AddNote;
+export default UpdateNote;

@@ -4,6 +4,12 @@ import NoteContext from "./noteContext";
 const NoteState = (props) => {
   const HOST = "http://127.0.0.1:5000/api";
   const [notes, setNotes] = useState([]);
+  const [updateNote, setUpdateNote] = useState({
+    _id: "",
+    title: "",
+    description: "",
+    tag: "",
+  });
 
   // getNotes
   const getNotes = async () => {
@@ -56,9 +62,9 @@ const NoteState = (props) => {
   };
 
   // editNote
-  const editNote = async ({ id, title, description, tag }) => {
+  const editNote = async ({ _id, title, description, tag }) => {
     const data = { title, description, tag };
-    const response = await fetch(`${HOST}/notes${id}`, {
+    const response = await fetch(`${HOST}/notes/${_id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -67,22 +73,38 @@ const NoteState = (props) => {
       },
       body: JSON.stringify(data),
     });
-
-    for (let index = 0; index < notes.length; index++) {
-      const element = notes[index];
-      if (element._id === id) {
-        element.title = title;
-        element.description = description;
-        element.tag = tag;
+    if (response.status === 200) {
+      await response.json();
+      let newNotes = JSON.parse(JSON.stringify(notes));
+      for (let index = 0; index < newNotes.length; index++) {
+        const element = newNotes[index];
+        if (element._id === _id) {
+          newNotes[index].title = title;
+          newNotes[index].description = description;
+          newNotes[index].tag = tag;
+          break;
+        }
       }
+      setNotes(newNotes);
+    } else {
+      const errors = await response.json();
+      errors.errors.forEach((error) => {
+        console.log("error", error);
+      });
     }
-
-    console.log("editNote", response.json());
   };
 
   return (
     <NoteContext.Provider
-      value={{ notes, getNotes, addNote, deleteNote, editNote }}
+      value={{
+        notes,
+        getNotes,
+        addNote,
+        deleteNote,
+        editNote,
+        updateNote,
+        setUpdateNote,
+      }}
     >
       {props.children}
     </NoteContext.Provider>
