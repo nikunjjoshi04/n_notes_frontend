@@ -30,7 +30,7 @@ const AddNote = (props) => {
       >
         <div className="modal-dialog modal-dialog-centered modal-xl">
           <div className="modal-content">
-            <form className="my-3">
+            <form className="my-3" onSubmit={handleClick}>
               <div className="modal-header">
                 <h5 className="modal-title" id="addNoteModelIdLabel">
                   Add Note
@@ -93,7 +93,6 @@ const AddNote = (props) => {
                 </button>
                 <button
                   type="submit"
-                  onClick={handleClick}
                   className="btn btn-primary"
                 >
                   Add Note

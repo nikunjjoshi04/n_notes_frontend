@@ -28,7 +28,7 @@ const NoteState = (props) => {
   // AddNote
   const addNote = async ({ title, description, tag }) => {
     const data = { title, description, tag };
-    console.log("AddNote", data);
+    
     const response = await fetch(`${HOST}/notes`, {
       method: "POST",
       headers: {
@@ -38,9 +38,16 @@ const NoteState = (props) => {
       },
       body: JSON.stringify(data),
     });
-    var note = await response.json();
-    setNotes(notes.concat(note.data));
-    console.log("AddNote", note);
+
+    if (response.status === 200) {
+      var note = await response.json();
+      setNotes(notes.concat(note.data));
+    } else {
+      const errors = await response.json();
+      errors.errors.forEach((error) => {
+        console.log("error", error);
+      });
+    }
   };
 
   // deleteNote
