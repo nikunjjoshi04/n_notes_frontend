@@ -18,8 +18,7 @@ const Login = () => {
         });
 
         const data = await response.json();
-        if (response.status == 200) {
-            console.log(data);
+        if (response.status === 200) {
             localStorage.setItem("token", data.access_token);
             navigate("/");
         } else {
@@ -61,12 +60,6 @@ const Login = () => {
                         onChange={onChange}
                     />
                 </div>
-                {/* <div className="form-group form-check">
-                    <input type="checkbox" className="form-check-input" id="exampleCheck1" />
-                    <label className="form-check-label" htmlFor="exampleCheck1">
-                        Check me out
-                    </label>
-                </div> */}
                 <button type="submit" className="btn btn-primary">
                     Submit
                 </button>
